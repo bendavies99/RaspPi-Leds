@@ -1,30 +1,34 @@
 package net.bdavies;
 
 import com.github.mbelling.ws281x.Color;
-import com.github.mbelling.ws281x.LedStripType;
 import com.github.mbelling.ws281x.Ws281xLedStrip;
+import net.bdavies.config.Config;
+import net.bdavies.config.ConfigFactory;
+
+import java.io.File;
 
 public class Main implements Runnable {
 
     Ws281xLedStrip strip;
     Thread thread;
 
-    public Main(Ws281xLedStrip strip) {
-        this.strip = strip;
+    public Main() {
+
+        Config config = ConfigFactory.makeConfig(new File("config/config.json"));
         thread = new Thread(this);
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Ws281xLedStrip strip = new Ws281xLedStrip(30,
-                19,
-                800000,
-                10,
-                255,
-                1,
-                false,
-                LedStripType.WS2811_STRIP_GRB,
-                false);
-        Main main = new Main(strip);
+//        Ws281xLedStrip strip = new Ws281xLedStrip(30,
+//                19,
+//                800000,
+//                10,
+//                255,
+//                1,
+//                false,
+//                LedStripType.WS2811_STRIP_GRB,
+//                false);
+        Main main = new Main();
         main.start();
 
     }
@@ -38,7 +42,7 @@ public class Main implements Runnable {
     }
 
     private void start() {
-        thread.start();
+        //thread.start();
 
     }
 

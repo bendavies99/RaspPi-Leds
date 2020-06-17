@@ -1,0 +1,26 @@
+{
+  "strips": [
+    {
+      "pinNumber": 18,
+      /* GPIO PIN */
+      "ledCount": 30,
+      /* Number of LEDs */
+      "brightness": 255,
+      /* LED Brightness */
+      "clearOnBoot": true,
+      /* Set pixels to black on boot */
+      "id": "Test-Led"
+      /* MQTT Topic to use */
+    }
+  ],
+  "mqtt": {
+    "username": "",
+    /* Broker Username (Optional) */
+    "password": "",
+    /* Broker Password (Optional) */
+    "brokerIp": "xxx.xxx.x.x",
+    /* Broker IP */
+    "port": 1883
+    /* Port 1883 is default (Optional) */
+  }
+}
