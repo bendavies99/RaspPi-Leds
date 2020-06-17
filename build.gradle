@@ -11,8 +11,19 @@ repositories {
     mavenLocal()
 }
 
+run {
+    standardInput = System.in
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation "com.github.mbelling:rpi-ws281x-java:2.0.0-SNAPSHOT" // Local Repo Follow: https://github.com/rpi-ws281x/rpi-ws281x-java
+    implementation "com.github.mbelling:rpi-ws281x-java:2.0.0-SNAPSHOT"
+    // Local Repo Follow: https://github.com/rpi-ws281x/rpi-ws281x-java
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.13.0'
+    implementation 'org.projectlombok:lombok:1.18.12'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
