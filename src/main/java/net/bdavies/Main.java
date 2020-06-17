@@ -2,11 +2,13 @@ package net.bdavies;
 
 import com.github.mbelling.ws281x.Color;
 import com.github.mbelling.ws281x.Ws281xLedStrip;
+import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.Config;
 import net.bdavies.config.ConfigFactory;
 
 import java.io.File;
 
+@Slf4j
 public class Main implements Runnable {
 
     Ws281xLedStrip strip;
@@ -15,6 +17,7 @@ public class Main implements Runnable {
     public Main() {
 
         Config config = ConfigFactory.makeConfig(new File("config/config.json"));
+        log.info("Broker IP: {}", config.getMqtt().getBrokerIp());
         thread = new Thread(this);
     }
 
