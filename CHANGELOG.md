@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.1...v1.0.2) (2020-06-19)
+
+
+### Bug Fixes
+
+* Use Java 8 for travis ([c62816c](https://github.com/bendavies99/RaspPi-Leds/commit/c62816c16ddd41ac2e954ba157d4cc3f03965903))
+
 ## [1.0.1](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.0...v1.0.1) (2020-06-19)
 
 
