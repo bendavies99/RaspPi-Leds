@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.0...v1.0.1) (2020-06-19)
+
+
+### Bug Fixes
+
+* File paths regarding release assets ([767080e](https://github.com/bendavies99/RaspPi-Leds/commit/767080e93d9c1449a45ec54016d82828a62a348e))
+
 # 1.0.0 (2020-06-19)
 
 
