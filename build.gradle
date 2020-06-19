@@ -1,14 +1,103 @@
 plugins {
     id 'application'
+    id 'de.gliderpilot.semantic-release' version '1.0.0'
+    id 'signing'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.8.4"
 }
 
 group 'net.bdavies'
 application.mainClassName = "net.bdavies.Application"
 application.applicationName = "RLed"
+archivesBaseName = "RaspPi-Leds"
 
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+project.afterEvaluate {
+    task javadocJar(type: Jar) {
+        dependsOn project.tasks.javadoc
+        from project.tasks.javadoc.destinationDir
+        archiveClassifier = 'javadoc'
+        group 'build'
+    }
+
+    task sourceJar(type: Jar) {
+        dependsOn project.tasks.classes
+        from sourceSets.main.allSource
+        archiveClassifier = 'sources'
+        group 'build'
+    }
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                artifact sourceJar
+                artifact javadocJar
+                artifactId archivesBaseName
+                versionMapping {
+                    usage('java-api') {
+                        fromResolutionOf('runtimeClasspath')
+                    }
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
+                }
+
+                pom {
+                    name = 'Babblebot-Server'
+                    description = 'This is the core server for Babblebot'
+                    url = 'https://github.com/bendavies99/BabbleBot-Server'
+                    issueManagement {
+                        system = 'GitHub'
+                        url = 'https://github.com/bendavies99/BabbleBot-Server/issues'
+                    }
+                    licenses {
+                        license {
+                            name = 'GPL-3.0'
+                            url = 'https://github.com/bendavies99/BabbleBot-Server/LICENSE.md'
+                            distribution = 'repo'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/bendavies99/BabbleBot-Server'
+                        connection = 'scm:git:git://github.com/bendavies99/BabbleBot-Server.git'
+                        developerConnection = 'scm:git:ssh://git@github.com:bendavies99/BabbleBot-Server.git'
+                    }
+                    developers {
+                        developer {
+                            name = 'Ben Davies'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+        key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+        publications = ['maven']
+        publish = true
+        pkg {
+            repo = 'Babblebot-Server'
+            name = archivesBaseName
+            userOrg = user
+            licenses = ['GPL-3.0']
+            vcsUrl = 'https://github.com/bendavies99/RaspPi-Leds.git'
+            version {
+                name = version
+                vcsTag = version
+            }
+        }
+    }
+
+    publish.dependsOn(bintrayUpload)
+    project.tasks.bintrayUpload.doLast {
+        bintrayPublish
+    }
 }
 
 task createProperties {
