@@ -1,6 +1,6 @@
 plugins {
+    id 'groovy'
     id 'application'
-    id 'de.gliderpilot.semantic-release' version '1.0.0'
     id 'signing'
     id 'maven-publish'
     id "com.jfrog.bintray" version "1.8.4"
@@ -100,9 +100,9 @@ project.afterEvaluate {
     }
 }
 
-task createProperties {
+task createPropertiesVersion {
     doLast {
-        def version = project.version.toString()
+        def version = version.toString()
         def file = new File("$project.buildDir/resources/main/version.txt")
         if (!file.exists()) {
             println("Ran Create Properties")
@@ -114,18 +114,18 @@ task createProperties {
 }
 
 run {
-    dependsOn createProperties
+    dependsOn createPropertiesVersion
     standardInput = System.in
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'net.bdavies.Application'
-    }
-
-
-    dependsOn createProperties
-}
+//jar {
+//    manifest {
+//        attributes 'Main-Class': 'net.bdavies.Application'
+//    }
+//
+//
+//    dependsOn createPropertiesVersion
+//}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
