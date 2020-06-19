@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.2...v1.0.3) (2020-06-19)
+
+
+### Bug Fixes
+
+* Version not being added to jar file ([b98215b](https://github.com/bendavies99/RaspPi-Leds/commit/b98215bf83b21279906d126af5ba3f3a06b3fb3b))
+
 ## [1.0.2](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.1...v1.0.2) (2020-06-19)
 
 
