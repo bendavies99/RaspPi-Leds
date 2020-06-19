@@ -118,14 +118,14 @@ run {
     standardInput = System.in
 }
 
-//jar {
-//    manifest {
-//        attributes 'Main-Class': 'net.bdavies.Application'
-//    }
-//
-//
-//    dependsOn createPropertiesVersion
-//}
+jar {
+    manifest {
+        attributes 'Main-Class': 'net.bdavies.Application'
+    }
+
+
+    dependsOn createPropertiesVersion
+}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
