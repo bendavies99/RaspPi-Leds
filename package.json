@@ -53,7 +53,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "bash -c \"rm -rf ./app/build/distributions && ./gradlew assembleDist\""
+          "prepareCmd": "bash -c \"rm -rf ./build/distributions && ./gradlew assembleDist\""
         }
       ],
       [
@@ -61,11 +61,11 @@
         {
           "assets": [
             {
-              "path": "app/build/distributions/*.tar",
+              "path": "build/distributions/*.tar",
               "label": "Tar Archive"
             },
             {
-              "path": "app/build/distributions/*.zip",
+              "path": "build/distributions/*.zip",
               "label": "Zip Archive"
             }
           ]
