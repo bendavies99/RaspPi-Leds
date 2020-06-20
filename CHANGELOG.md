@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.3...v1.0.4) (2020-06-20)
+
+
+### Bug Fixes
+
+* Added synchronised to all Strip functions ([d648186](https://github.com/bendavies99/RaspPi-Leds/commit/d648186c583b543eb252a2337af972724b76d385))
+
 ## [1.0.3](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.2...v1.0.3) (2020-06-19)
 
 
