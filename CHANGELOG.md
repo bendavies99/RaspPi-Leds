@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.4...v1.0.5) (2020-06-20)
+
+
+### Bug Fixes
+
+* Brightness was not being set ([0befac2](https://github.com/bendavies99/RaspPi-Leds/commit/0befac269759c375840eafa1da3920acc398b666))
+
 ## [1.0.4](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.3...v1.0.4) (2020-06-20)
 
 
