@@ -61,7 +61,7 @@ public class Strip {
         this.pwmChannel = (gpioPin == 18 || gpioPin == 12) ? 0 : 1;
         this.invert = false;
         this.stripType = LedStripType.WS2811_STRIP_GRB;
-        this.clearOnExit = true;
+        this.clearOnExit = false;
         this.clearOnBoot = config.isClearOnBoot();
         this.pixels = new Color[ledsCount];
         this.runEffect = true;
@@ -90,6 +90,7 @@ public class Strip {
 
     public synchronized void render() {
         if (type == SetupType.PROD) {
+            productionStrip.setBrightness(brightness);
             for (int i = 0; i < pixels.length; i++) {
                 productionStrip.setPixel(i, pixels[i]);
             }
