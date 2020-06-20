@@ -72,7 +72,7 @@ public class Strip {
         setCurrentEffect(new Solid(), "Solid");
     }
 
-    public void init() {
+    public synchronized void init() {
 
         if (type == SetupType.PROD) {
             productionStrip = new Ws281xLedStrip(ledsCount, gpioPin, frequencyHz, dma, brightness, pwmChannel,
@@ -88,7 +88,7 @@ public class Strip {
         }
     }
 
-    public void render() {
+    public synchronized void render() {
         if (type == SetupType.PROD) {
             for (int i = 0; i < pixels.length; i++) {
                 productionStrip.setPixel(i, pixels[i]);
@@ -150,7 +150,7 @@ public class Strip {
         }
     }
 
-    public void setCurrentColor(Color currentColor) {
+    public synchronized void setCurrentColor(Color currentColor) {
 
         if (this.currentColor != null) {
             this.oldColor = this.currentColor;
@@ -177,7 +177,7 @@ public class Strip {
         return this.pixels[pixel];
     }
 
-    public void loop(long curTime) {
+    public synchronized void loop(long curTime) {
         Effect e = this.getCurrentEffect();
         if (this.isRunEffect()) {
             if (curTime - lastUpdateInMillis >= e.getDelay()) {
@@ -226,13 +226,13 @@ public class Strip {
         }
     }
 
-    public void setCurrentEffect(Effect effect, String name) {
+    public synchronized void setCurrentEffect(Effect effect, String name) {
         this.currentEffect = effect;
         application.getMqttClient().publishChange(this, ChangeTopic.FX, name);
 
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         off();
         if (this.frame != null) {
             frame.getPanel().stop();
