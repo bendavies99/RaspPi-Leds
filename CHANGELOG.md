@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.5...v1.0.6) (2020-06-21)
+
+
+### Bug Fixes
+
+* Allow spi pin ([2bc8673](https://github.com/bendavies99/RaspPi-Leds/commit/2bc867335bcaef75e22fa97346b915ed803a0eb2))
+
 ## [1.0.5](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.4...v1.0.5) (2020-06-20)
 
 
