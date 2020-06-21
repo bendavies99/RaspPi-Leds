@@ -96,7 +96,7 @@ public class PollingService {
 
     public synchronized void stop() {
         timer.cancel();
-        service.shutdown();
+        service.shutdownNow();
     }
 
     public static class TagItem {

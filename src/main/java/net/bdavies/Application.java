@@ -25,7 +25,7 @@ public class Application implements Runnable {
     @Getter
     private static ExecutorService service; // Program wide thread pool for async operations (e.g. connecting to the MQTT server.)
     private final List<Strip> strips;
-    private final Thread thread;
+    private final Thread thread, colorThread, brightnessThread;
     @Getter
     private final MQTTClient mqttClient;
     @Getter
@@ -61,6 +61,45 @@ public class Application implements Runnable {
         config.getStrips().forEach(mqttClient::listenToStrip);
 
         thread = new Thread(this);
+
+        colorThread = new Thread(() -> {
+            long lastTime = System.nanoTime();
+            double ns = 1000000000.0 / FPS;
+            double delta = 0;
+            while (running) {
+                long curTime = System.currentTimeMillis();
+                long now = System.nanoTime();
+                delta += (now - lastTime) / ns;
+                lastTime = now;
+                if (delta >= 1) {
+                    strips.forEach(s -> {
+                        s.loopColor(curTime);
+                    });
+                    delta--;
+                }
+
+            }
+        });
+
+        brightnessThread = new Thread(() -> {
+            long lastTime = System.nanoTime();
+            double ns = 1000000000.0 / FPS;
+            double delta = 0;
+            while (running) {
+                long curTime = System.currentTimeMillis();
+                long now = System.nanoTime();
+                delta += (now - lastTime) / ns;
+                lastTime = now;
+                if (delta >= 1) {
+                    strips.forEach(s -> {
+                        s.loopBrightness(curTime);
+                    });
+                    delta--;
+                }
+
+            }
+        });
+
         pollingService = new PollingService(this);
     }
 
@@ -78,10 +117,12 @@ public class Application implements Runnable {
                 .findFirst().get();
     }
 
-    private void start() {
+    private synchronized void start() {
         running = true;
         pollingService.start();
         thread.start();
+        brightnessThread.start();
+        colorThread.start();
 
     }
 
@@ -107,10 +148,12 @@ public class Application implements Runnable {
             this.strips.forEach(Strip::shutdown);
             running = false;
             try {
-                thread.join();
+                thread.join(1);
+                colorThread.join(1);
+                brightnessThread.join(1);
 
                 mqttClient.shutdown();
-                service.shutdown();
+                service.shutdownNow();
                 pollingService.stop();
                 Runtime.getRuntime().runFinalization();
                 try {

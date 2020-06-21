@@ -149,7 +149,7 @@ public class MQTTClient {
 
     public void shutdown() {
         try {
-            client.disconnect();
+            client.disconnectForcibly(1);
             client.close();
         } catch (MqttException e) {
             log.error("Failed to disconnect");

@@ -187,6 +187,24 @@ public class Strip {
             }
         }
 
+
+    }
+
+    public synchronized void setCurrentEffect(Effect effect, String name) {
+        this.currentEffect = effect;
+        application.getMqttClient().publishChange(this, ChangeTopic.FX, name);
+
+    }
+
+    public synchronized void shutdown() {
+        off();
+        if (this.frame != null) {
+            frame.getPanel().stop();
+            frame.dispose();
+        }
+    }
+
+    public void loopBrightness(long curTime) {
         int alphaDecayDelay = 5;
         if (this.brightnessChange) {
             if (curTime - lastBrightnessChange >= alphaDecayDelay) {
@@ -211,7 +229,10 @@ public class Strip {
                 render();
             }
         }
+    }
 
+    public void loopColor(long curTime) {
+        int alphaDecayDelay = 5;
         if (this.colorChange) {
             if (curTime - lastColorChange >= alphaDecayDelay) {
                 lastColorChange = curTime;
@@ -224,20 +245,6 @@ public class Strip {
                 }
                 render();
             }
-        }
-    }
-
-    public synchronized void setCurrentEffect(Effect effect, String name) {
-        this.currentEffect = effect;
-        application.getMqttClient().publishChange(this, ChangeTopic.FX, name);
-
-    }
-
-    public synchronized void shutdown() {
-        off();
-        if (this.frame != null) {
-            frame.getPanel().stop();
-            frame.dispose();
         }
     }
 
