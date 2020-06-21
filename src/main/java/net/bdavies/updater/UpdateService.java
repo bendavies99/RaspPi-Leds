@@ -125,10 +125,6 @@ public class UpdateService {
         }
         AtomicBoolean copy = new AtomicBoolean(true);
         try {
-            //noinspection ResultOfMethodCallIgnored
-            Arrays.stream(Objects.requireNonNull(libsFolder.listFiles()))
-                    .filter(f -> f.getName().contains("rpi-ws"))
-                    .forEach(File::delete);
             Arrays.stream(Objects.requireNonNull(ourLibsFolder.listFiles()))
                     .filter(f ->
                             Arrays.stream(Objects.requireNonNull(libsFolder.listFiles()))
