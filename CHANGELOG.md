@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.6...v1.0.7) (2020-06-21)
+
+
+### Bug Fixes
+
+* Updater not working after restart ([c7c7de6](https://github.com/bendavies99/RaspPi-Leds/commit/c7c7de6de6d92b448bf62f81b5189806ed80e62a))
+
 ## [1.0.6](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.5...v1.0.6) (2020-06-21)
 
 
