@@ -58,7 +58,7 @@ public class Strip {
         this.application = application;
         this.frequencyHz = 800000;
         this.dma = 10;
-        this.pwmChannel = (gpioPin == 18 || gpioPin == 12) ? 0 : 1;
+        this.pwmChannel = (gpioPin == 18 || gpioPin == 12 || gpioPin == 10) ? 0 : 1;
         this.invert = false;
         this.stripType = LedStripType.WS2811_STRIP_GRB;
         this.clearOnExit = false;
