@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.8...v1.1.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* Fixed performance issues ([f296cb4](https://github.com/bendavies99/RaspPi-Leds/commit/f296cb4784de32a73562074638c4196e8f5c6808))
+
+
+### Features
+
+* Reactive Effect for listening to music ([8ab455e](https://github.com/bendavies99/RaspPi-Leds/commit/8ab455e217938d72367a9f397fda62eab15c1665))
+
 ## [1.0.8](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.7...v1.0.8) (2020-06-21)
 
 
