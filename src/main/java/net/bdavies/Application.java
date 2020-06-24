@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.Config;
 import net.bdavies.config.ConfigFactory;
+import net.bdavies.fx.FXUtil;
 import net.bdavies.mqtt.MQTTClient;
-import net.bdavies.updater.PollingService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,20 +23,21 @@ public class Application implements Runnable {
 
     public static final double FPS = 144.0;
     @Getter
-    private static ExecutorService service; // Program wide thread pool for async operations (e.g. connecting to the MQTT server.)
+    private static ExecutorService service;
     private final List<Strip> strips;
-    private final Thread thread, colorThread, brightnessThread;
+    private final Thread thread;
     @Getter
     private final MQTTClient mqttClient;
     @Getter
     private final String[] args;
-    private final PollingService pollingService;
+    //private final PollingService pollingService;
     @Getter
     private String version;
     private boolean running;
 
     public Application(boolean dev, String[] args) {
         this.args = args;
+        FXUtil.fillColourWheelList();
         try {
             InputStreamReader r = new InputStreamReader(getClass().getResourceAsStream("/version.txt"));
             BufferedReader reader = new BufferedReader(r);
@@ -48,7 +49,7 @@ public class Application implements Runnable {
             System.exit(-1);
         }
         Config config = ConfigFactory.makeConfig(new File("config/config.json"));
-        service = Executors.newFixedThreadPool(10);
+        service = Executors.newCachedThreadPool();
         this.strips = new ArrayList<>();
         this.mqttClient = new MQTTClient(this, config.getMqtt());
         this.mqttClient.connect();
@@ -62,45 +63,7 @@ public class Application implements Runnable {
 
         thread = new Thread(this);
 
-        colorThread = new Thread(() -> {
-            long lastTime = System.nanoTime();
-            double ns = 1000000000.0 / FPS;
-            double delta = 0;
-            while (running) {
-                long curTime = System.currentTimeMillis();
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
-                if (delta >= 1) {
-                    strips.forEach(s -> {
-                        s.loopColor(curTime);
-                    });
-                    delta--;
-                }
-
-            }
-        });
-
-        brightnessThread = new Thread(() -> {
-            long lastTime = System.nanoTime();
-            double ns = 1000000000.0 / FPS;
-            double delta = 0;
-            while (running) {
-                long curTime = System.currentTimeMillis();
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
-                if (delta >= 1) {
-                    strips.forEach(s -> {
-                        s.loopBrightness(curTime);
-                    });
-                    delta--;
-                }
-
-            }
-        });
-
-        pollingService = new PollingService(this);
+        //pollingService = new PollingService(this);
     }
 
     public static void main(String[] args) {
@@ -119,10 +82,8 @@ public class Application implements Runnable {
 
     private synchronized void start() {
         running = true;
-        pollingService.start();
+        //pollingService.start();
         thread.start();
-        brightnessThread.start();
-        colorThread.start();
 
     }
 
@@ -137,8 +98,16 @@ public class Application implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             if (delta >= 1) {
-                this.strips.forEach(s -> s.loop(curTime));
+                for (int i = 0; i < strips.size(); i++) {
+                    strips.get(i).loop(curTime);
+                }
                 delta--;
+            }
+
+            try {
+                Thread.sleep((long) (1000 / FPS));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -149,12 +118,10 @@ public class Application implements Runnable {
             running = false;
             try {
                 thread.join(1);
-                colorThread.join(1);
-                brightnessThread.join(1);
 
                 mqttClient.shutdown();
                 service.shutdownNow();
-                pollingService.stop();
+                //pollingService.stop();
                 Runtime.getRuntime().runFinalization();
                 try {
                     List<String> command = new ArrayList<>();

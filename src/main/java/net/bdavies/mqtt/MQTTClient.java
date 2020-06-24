@@ -24,7 +24,7 @@ public class MQTTClient {
 
     private final MQTTConfig config;
     private final Application application;
-    private MqttClient client;
+    private volatile MqttClient client;
     private int connectAttempts = 0;
 
     public MQTTClient(Application application, MQTTConfig config) {
@@ -32,7 +32,7 @@ public class MQTTClient {
         this.application = application;
     }
 
-    public boolean connect() {
+    public void connect() {
         try {
             client = new MqttClient("tcp://" + config.getBrokerIp() + ":" + config.getPort(),
                     "RaspPi-Leds:" + RandomStringUtils.randomAlphabetic(7), new MemoryPersistence());
@@ -104,19 +104,16 @@ public class MQTTClient {
                 client.connectWithResult(connectOptions);
                 client.subscribe("Rasp-Pi-Leds");
                 log.info("Connected to the MQTT Server");
-                return true;
             } catch (MqttException e) {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +
                             "log when it has connected.");
                 }
-                Application.getService().submit((Runnable) this::connect);
-                return false;
+                Application.getService().submit(this::connect);
             }
 
         } catch (MqttException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
