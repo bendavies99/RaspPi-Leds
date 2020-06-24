@@ -25,10 +25,10 @@ public class BPM extends Effect {
     @Override
     public void render(Strip strip) {
         int step = (int) (Time.getMillis() / 20) & 0xFF;
-        int beat = (int) Beat.beatsin(150, 0, 255);
+        int beat = (int) Beat.beatsin(150, 0, strip.getLedsCount());
 
         for (int i = 0; i < strip.getLedsCount(); i++) {
-            Color c = FXUtil.colorWheel(beat + step + (i * 10));
+            Color c = FXUtil.colorWheel(beat + (i * 10));
             strip.setPixel(i, c);
         }
 
