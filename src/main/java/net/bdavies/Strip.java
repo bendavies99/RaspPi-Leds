@@ -8,11 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.StripConfig;
 import net.bdavies.fx.Effect;
 import net.bdavies.fx.FXUtil;
-import net.bdavies.fx.basic.Solid;
+import net.bdavies.fx.basic.Reactive;
 import net.bdavies.mqtt.ChangeTopic;
+import net.bdavies.networking.ReactiveUDP;
+
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.HashMap;
 
 @Slf4j
 public class Strip {
+
+    private static DatagramSocket socket;
 
     @Getter
     private final int ledsCount;
@@ -28,6 +35,9 @@ public class Strip {
     private final Color[] pixels;
     private final SetupType type;
     private final Application application;
+    private final boolean[] pixelChanged;
+    @Getter
+    private final ReactiveUDP reactiveUDP;
     private int brightness;
     private Ws281xLedStrip productionStrip;
     private DevFrame frame;
@@ -42,9 +52,9 @@ public class Strip {
     private boolean brightnessChange = false;
     private int toBrightness = 0;
     private long lastBrightnessChange = System.currentTimeMillis();
+    private int lastBrightnessUsed = 0;
     @Getter
     private State state;
-
     private boolean colorChange = false;
     private Color toColor = Color.BLACK;
     private long lastColorChange = System.currentTimeMillis();
@@ -52,6 +62,13 @@ public class Strip {
     private Color oldColor = Color.RED;
 
     public Strip(StripConfig config, SetupType type, Application application) {
+        if (Strip.socket == null) {
+            try {
+                Strip.socket = new DatagramSocket(3457);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
         this.ledsCount = config.getLedCount();
         this.gpioPin = config.getPinNumber();
         this.type = type;
@@ -64,12 +81,14 @@ public class Strip {
         this.clearOnExit = false;
         this.clearOnBoot = config.isClearOnBoot();
         this.pixels = new Color[ledsCount];
+        this.pixelChanged = new boolean[ledsCount];
         this.runEffect = true;
         this.id = config.getId();
         this.oldBrightness = config.getBrightness();
         setCurrentColor(Color.RED);
         setBrightness(config.getBrightness());
-        setCurrentEffect(new Solid(), "Solid");
+        setCurrentEffect(new Reactive(new HashMap<>()), "Reactive");
+        this.reactiveUDP = new ReactiveUDP(this, Strip.socket);
     }
 
     public synchronized void init() {
@@ -77,6 +96,7 @@ public class Strip {
         if (type == SetupType.PROD) {
             productionStrip = new Ws281xLedStrip(ledsCount, gpioPin, frequencyHz, dma, brightness, pwmChannel,
                     invert, stripType, clearOnExit);
+            log.info("Setup Strip");
         } else {
             frame = new DevFrame(ledsCount, this.getId());
             frame.getPanel().start();
@@ -88,18 +108,37 @@ public class Strip {
         }
     }
 
-    public synchronized void render() {
-        if (type == SetupType.PROD) {
-            productionStrip.setBrightness(brightness);
-            for (int i = 0; i < pixels.length; i++) {
-                productionStrip.setPixel(i, pixels[i]);
+    public void render() {
+        try {
+            if (type == SetupType.PROD) {
+                boolean brightnessChanged = false;
+                boolean didAPixelChange = false;
+                if (lastBrightnessUsed != brightness) {
+                    productionStrip.setBrightness(brightness);
+                    lastBrightnessUsed = brightness;
+                    brightnessChanged = true;
+                }
+                for (int i = 0; i < pixels.length; i++) {
+                    if (pixelChanged[i]) {
+                        productionStrip.setPixel(i, pixels[i]);
+                        pixelChanged[i] = false;
+                        didAPixelChange = true;
+                    }
+                }
+                if (brightnessChanged || didAPixelChange) {
+                    productionStrip.render();
+                }
+            } else {
+                // Render to JFrame
+                for (int i = 0; i < pixels.length; i++) {
+                    if (pixelChanged[i]) {
+                        pixelChanged[i] = false;
+                        frame.getPanel().setPixel(i, pixels[i], brightness);
+                    }
+                }
             }
-            productionStrip.render();
-        } else {
-            // Render to JFrame
-            for (int i = 0; i < pixels.length; i++) {
-                frame.getPanel().setPixel(i, pixels[i], brightness);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -135,20 +174,25 @@ public class Strip {
 
 
     public synchronized void setPixel(int pixel, int red, int green, int blue) {
-        if (pixel < 0 || pixel > ledsCount - 1) return;
-        this.pixels[pixel] = new Color(red, green, blue);
+        setPixel(pixel, new Color(red, green, blue));
     }
 
 
     public synchronized void setPixel(int pixel, Color color) {
-        setPixel(pixel, color.getRed(), color.getGreen(), color.getBlue());
+        if (pixel < 0 || pixel > ledsCount - 1) return;
+        Color c = this.pixels[pixel];
+        if (c != null) {
+            if (c.getRed() == color.getRed() && c.getGreen() == color.getGreen() && c.getBlue() == color.getBlue()) {
+                return;
+            }
+        }
+        this.pixelChanged[pixel] = true;
+        this.pixels[pixel] = color;
     }
 
 
     public synchronized void setStrip(int red, int green, int blue) {
-        for (int i = 0; i < ledsCount; i++) {
-            setPixel(i, red, green, blue);
-        }
+        setStrip(new Color(red, green, blue));
     }
 
     public synchronized void setCurrentColor(Color currentColor) {
@@ -170,7 +214,9 @@ public class Strip {
     }
 
     public synchronized void setStrip(Color color) {
-        setStrip(color.getRed(), color.getGreen(), color.getBlue());
+        for (int i = 0; i < ledsCount; i++) {
+            setPixel(i, color);
+        }
     }
 
 
@@ -179,14 +225,16 @@ public class Strip {
     }
 
     public synchronized void loop(long curTime) {
-        Effect e = this.getCurrentEffect();
+        Effect e = this.currentEffect;
         if (this.isRunEffect()) {
-            if (curTime - lastUpdateInMillis >= e.getDelay()) {
+            if (curTime - lastUpdateInMillis >= e.delay) {
                 lastUpdateInMillis = curTime;
                 e.render(this);
             }
         }
 
+        loopColor(curTime);
+        loopBrightness(curTime);
 
     }
 
@@ -198,6 +246,7 @@ public class Strip {
 
     public synchronized void shutdown() {
         off();
+        this.reactiveUDP.stop();
         if (this.frame != null) {
             frame.getPanel().stop();
             frame.dispose();
@@ -217,6 +266,7 @@ public class Strip {
                     brightness++;
                 } else {
                     if (this.brightness == 0) {
+                        System.out.println("Yo");
                         this.runEffect = false;
                         setState(State.OFF);
                     }

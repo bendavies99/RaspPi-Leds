@@ -16,7 +16,7 @@ public abstract class Effect {
      * This is how much to wait in milliseconds before next update
      */
     @Getter
-    protected int delay = 50;
+    public int delay = 50;
 
     public Effect(Map<String, Object> config) {
         this.config = config;

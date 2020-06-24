@@ -41,7 +41,8 @@ public class EffectContainer {
         SOLID(Solid.class),
         STROBE(Strobe.class),
         THEATER_CHASE(TheaterChase.class),
-        HALLOWEEN(Halloween.class);
+        HALLOWEEN(Halloween.class),
+        REACTIVE(Reactive.class);
 
 
         Class<? extends Effect> effectClass;

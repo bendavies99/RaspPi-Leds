@@ -4,8 +4,19 @@ import com.github.mbelling.ws281x.Color;
 import lombok.extern.slf4j.Slf4j;
 import net.bdavies.Strip;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 public class FXUtil {
+
+    private static final List<Color> possibleColorsInWheel = new ArrayList<>(256);
+
+    public static void fillColourWheelList() {
+        for (int i = 0; i < 256; i++) {
+            possibleColorsInWheel.add(colorWheelSet(i));
+        }
+    }
 
     public static void fillStrip(Strip strip, Color c) {
         strip.setStrip(c);
@@ -41,7 +52,7 @@ public class FXUtil {
         return Color.BLACK;
     }
 
-    public static Color colorWheel(int curPos) {
+    private static Color colorWheelSet(int curPos) {
         int pos = curPos & 255;
         if (pos < 85) {
             return new Color(pos * 3, 255 - pos * 3, 0);
@@ -52,6 +63,11 @@ public class FXUtil {
             pos -= 170;
             return new Color(0, pos * 3, 255 - pos * 3);
         }
+    }
+
+    public static Color colorWheel(int curPos) {
+        int pos = curPos & 255;
+        return possibleColorsInWheel.get(pos);
     }
 
 }
