@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.1...v1.1.2) (2020-06-25)
+
+
+### Bug Fixes
+
+* fixed brightness and color changes ([096befd](https://github.com/bendavies99/RaspPi-Leds/commit/096befd93c820cc68c098ed119f276768aaee78f))
+
 ## [1.1.1](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.0...v1.1.1) (2020-06-25)
 
 
