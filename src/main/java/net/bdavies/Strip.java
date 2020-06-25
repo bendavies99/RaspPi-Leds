@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.StripConfig;
 import net.bdavies.fx.Effect;
 import net.bdavies.fx.FXUtil;
-import net.bdavies.fx.basic.Reactive;
+import net.bdavies.fx.basic.Solid;
 import net.bdavies.mqtt.ChangeTopic;
 import net.bdavies.networking.ReactiveUDP;
 
@@ -87,7 +87,7 @@ public class Strip {
         this.oldBrightness = config.getBrightness();
         setCurrentColor(Color.RED);
         setBrightness(config.getBrightness());
-        setCurrentEffect(new Reactive(new HashMap<>()), "Reactive");
+        setCurrentEffect(new Solid(new HashMap<>()), "Solid");
         this.reactiveUDP = new ReactiveUDP(this, Strip.socket);
     }
 
