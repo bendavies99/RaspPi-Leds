@@ -1,3 +1,25 @@
+## [1.1.1](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.0...v1.1.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* Dont swap over the rpi library as this may have to be built on the pi using the program ([29a4d03](https://github.com/bendavies99/RaspPi-Leds/commit/29a4d0302aaf128d97c23482ab0b8bcc71cf5503))
+* Solid only renders if the color has changed ([dc21102](https://github.com/bendavies99/RaspPi-Leds/commit/dc21102686ecd4a9bd3c42f35f197e8ccca03db4))
+* Strip use solid by default ([d318112](https://github.com/bendavies99/RaspPi-Leds/commit/d3181127f7ee94b7ce51bc91fc56ac452351545d))
+* Uncommented PollingService ([9ad6e7e](https://github.com/bendavies99/RaspPi-Leds/commit/9ad6e7ea332339fbbf5abc2a9de16c165885ded1))
+* Updated FPS to 30 fps to improve performance ([d1b6c3d](https://github.com/bendavies99/RaspPi-Leds/commit/d1b6c3de98afb59ad7dcf881d30e43f01cc95917))
+
+
+### Performance Improvements
+
+* Lowered FPS down to 15 FPS ([c70df2c](https://github.com/bendavies99/RaspPi-Leds/commit/c70df2c27332fd84687aad8d9b235e2791117247))
+* Removed sync from strip methods ([ae87e46](https://github.com/bendavies99/RaspPi-Leds/commit/ae87e46070d8855d86819044911b63df09996ac0))
+
+
+### Reverts
+
+* Removed FPS Sleep from StripPanel ([4d36ccc](https://github.com/bendavies99/RaspPi-Leds/commit/4d36ccce71b07392b173194594224ce3cbf588c4))
+
 # [1.1.0](https://github.com/bendavies99/RaspPi-Leds/compare/v1.0.8...v1.1.0) (2020-06-24)
 
 
