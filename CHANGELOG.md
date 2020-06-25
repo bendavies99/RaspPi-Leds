@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.3...v1.1.4) (2020-06-25)
+
+
+### Bug Fixes
+
+* Made brightness transitions faster ([d79ba80](https://github.com/bendavies99/RaspPi-Leds/commit/d79ba8026b114b66127de477fdc6350961a2b30f))
+
 ## [1.1.3](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.2...v1.1.3) (2020-06-25)
 
 
