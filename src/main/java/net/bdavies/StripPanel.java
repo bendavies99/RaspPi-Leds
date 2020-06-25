@@ -50,12 +50,7 @@ public class StripPanel extends Canvas implements Runnable {
     public void run() {
         requestFocus();
         while (running) {
-            try {
                 render();
-                Thread.sleep((int) (1000 / Application.FPS));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
