@@ -6,6 +6,7 @@ import net.bdavies.config.Config;
 import net.bdavies.config.ConfigFactory;
 import net.bdavies.fx.FXUtil;
 import net.bdavies.mqtt.MQTTClient;
+import net.bdavies.updater.PollingService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +31,7 @@ public class Application implements Runnable {
     private final MQTTClient mqttClient;
     @Getter
     private final String[] args;
-    //private final PollingService pollingService;
+    private final PollingService pollingService;
     @Getter
     private String version;
     private boolean running;
@@ -63,7 +64,7 @@ public class Application implements Runnable {
 
         thread = new Thread(this);
 
-        //pollingService = new PollingService(this);
+        pollingService = new PollingService(this);
     }
 
     public static void main(String[] args) {
@@ -82,7 +83,7 @@ public class Application implements Runnable {
 
     private synchronized void start() {
         running = true;
-        //pollingService.start();
+        pollingService.start();
         thread.start();
 
     }
@@ -121,7 +122,7 @@ public class Application implements Runnable {
 
                 mqttClient.shutdown();
                 service.shutdownNow();
-                //pollingService.stop();
+                pollingService.stop();
                 Runtime.getRuntime().runFinalization();
                 try {
                     List<String> command = new ArrayList<>();
