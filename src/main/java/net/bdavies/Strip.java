@@ -85,6 +85,7 @@ public class Strip {
         this.runEffect = true;
         this.id = config.getId();
         this.oldBrightness = config.getBrightness();
+        setState(State.ON);
         setCurrentColor(Color.RED);
         setBrightness(config.getBrightness());
         setCurrentEffect(new Solid(new HashMap<>()), "Solid");
@@ -103,20 +104,23 @@ public class Strip {
         }
 
         if (clearOnBoot) {
-            setStrip(Color.BLACK);
+            setCurrentColor(Color.BLACK);
             render();
         }
     }
 
     public void render() {
         try {
+            boolean brightnessChanged = false;
+
+            if (lastBrightnessUsed != brightness) {
+                lastBrightnessUsed = brightness;
+                brightnessChanged = true;
+            }
             if (type == SetupType.PROD) {
-                boolean brightnessChanged = false;
                 boolean didAPixelChange = false;
-                if (lastBrightnessUsed != brightness) {
+                if (brightnessChanged) {
                     productionStrip.setBrightness(brightness);
-                    lastBrightnessUsed = brightness;
-                    brightnessChanged = true;
                 }
                 for (int i = 0; i < pixels.length; i++) {
                     if (pixelChanged[i]) {
@@ -131,7 +135,8 @@ public class Strip {
             } else {
                 // Render to JFrame
                 for (int i = 0; i < pixels.length; i++) {
-                    if (pixelChanged[i]) {
+
+                    if (pixelChanged[i] || brightnessChanged) {
                         pixelChanged[i] = false;
                         frame.getPanel().setPixel(i, pixels[i], brightness);
                     }
@@ -233,8 +238,6 @@ public class Strip {
             }
         }
 
-        loopColor(curTime);
-        loopBrightness(curTime);
 
     }
 
@@ -254,8 +257,9 @@ public class Strip {
     }
 
     public void loopBrightness(long curTime) {
-        int alphaDecayDelay = (int) (Application.FPS / 50);
+        int alphaDecayDelay = 5;
         if (this.brightnessChange) {
+            log.info("Running brightness change");
             if (curTime - lastBrightnessChange >= alphaDecayDelay) {
                 if (toBrightness < brightness) {
                     lastBrightnessChange = curTime;
@@ -263,7 +267,7 @@ public class Strip {
 
                 } else if (toBrightness > brightness) {
                     lastBrightnessChange = curTime;
-                    brightness += 5;
+                    brightness++;
                 } else {
                     if (this.brightness == 0) {
                         System.out.println("Yo");
@@ -282,13 +286,12 @@ public class Strip {
     }
 
     public void loopColor(long curTime) {
-        int alphaDecayDelay = (int) (Application.FPS / 50);
+        int alphaDecayDelay = 5;
         if (this.colorChange) {
             if (curTime - lastColorChange >= alphaDecayDelay) {
                 lastColorChange = curTime;
                 if (blendAmt < 255) {
-                    this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, blendAmt += 5);
-                    if (blendAmt > 255) blendAmt = 255;
+                    this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
                 } else {
                     this.colorChange = false;
                     this.blendAmt = 0;

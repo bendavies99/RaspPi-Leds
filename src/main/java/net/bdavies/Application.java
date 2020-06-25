@@ -23,10 +23,11 @@ import java.util.concurrent.Executors;
 public class Application implements Runnable {
 
     public static final double FPS = 15.0; //RaspPi Will handle this better
+    private static final double AUX_FPS = 144.0f; // For auxiliary items like color changes and brightness.
     @Getter
     private static ExecutorService service;
     private final List<Strip> strips;
-    private final Thread thread;
+    private final Thread thread, auxThread;
     @Getter
     private final MQTTClient mqttClient;
     @Getter
@@ -65,6 +66,30 @@ public class Application implements Runnable {
         thread = new Thread(this);
 
         pollingService = new PollingService(this);
+        auxThread = new Thread(() -> {
+            long lastTime = System.nanoTime();
+            double ns = 1000000000.0 / AUX_FPS;
+            double delta = 0;
+            while (running) {
+                try {
+                    long curTime = System.currentTimeMillis();
+                    long now = System.nanoTime();
+                    delta += (now - lastTime) / ns;
+                    lastTime = now;
+                    if (delta >= 1) {
+                        for (int i = 0; i < strips.size(); i++) {
+                            strips.get(i).loopColor(curTime);
+                            strips.get(i).loopBrightness(curTime);
+                        }
+                        delta--;
+                    }
+                    //noinspection BusyWait
+                    Thread.sleep((long) (1000 / AUX_FPS));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -85,7 +110,7 @@ public class Application implements Runnable {
         running = true;
         pollingService.start();
         thread.start();
-
+        auxThread.start();
     }
 
     @Override
@@ -106,6 +131,7 @@ public class Application implements Runnable {
             }
 
             try {
+                //noinspection BusyWait
                 Thread.sleep((long) (1000 / FPS));
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -119,6 +145,7 @@ public class Application implements Runnable {
             running = false;
             try {
                 thread.join(1);
+                auxThread.join(1);
 
                 mqttClient.shutdown();
                 service.shutdownNow();
