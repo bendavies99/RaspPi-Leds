@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class Application implements Runnable {
 
-    public static final double FPS = 30.0; //RaspPi Will handle this better
+    public static final double FPS = 15.0; //RaspPi Will handle this better
     @Getter
     private static ExecutorService service;
     private final List<Strip> strips;
