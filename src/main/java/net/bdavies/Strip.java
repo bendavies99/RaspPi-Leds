@@ -250,6 +250,7 @@ public class Strip {
     public synchronized void shutdown() {
         off();
         this.reactiveUDP.stop();
+        Strip.socket.close();
         if (this.frame != null) {
             frame.getPanel().stop();
             frame.dispose();
