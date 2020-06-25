@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.2...v1.1.3) (2020-06-25)
+
+
+### Bug Fixes
+
+* remove logging from brightness change ([07331fd](https://github.com/bendavies99/RaspPi-Leds/commit/07331fdbd32e6b23d81289bea4baec8929232b89))
+* remove logging from brightness change and close the UDP Socket ([e162e1c](https://github.com/bendavies99/RaspPi-Leds/commit/e162e1c04b5e4f21fb8af0cd859acb9840e1b38c))
+
 ## [1.1.2](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.1...v1.1.2) (2020-06-25)
 
 
