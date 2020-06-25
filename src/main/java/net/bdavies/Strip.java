@@ -173,12 +173,12 @@ public class Strip {
     }
 
 
-    public synchronized void setPixel(int pixel, int red, int green, int blue) {
+    public void setPixel(int pixel, int red, int green, int blue) {
         setPixel(pixel, new Color(red, green, blue));
     }
 
 
-    public synchronized void setPixel(int pixel, Color color) {
+    public void setPixel(int pixel, Color color) {
         if (pixel < 0 || pixel > ledsCount - 1) return;
         Color c = this.pixels[pixel];
         if (c != null) {
@@ -191,11 +191,11 @@ public class Strip {
     }
 
 
-    public synchronized void setStrip(int red, int green, int blue) {
+    public void setStrip(int red, int green, int blue) {
         setStrip(new Color(red, green, blue));
     }
 
-    public synchronized void setCurrentColor(Color currentColor) {
+    public void setCurrentColor(Color currentColor) {
 
         if (this.currentColor != null) {
             this.oldColor = this.currentColor;
@@ -213,18 +213,18 @@ public class Strip {
                 bits);
     }
 
-    public synchronized void setStrip(Color color) {
+    public void setStrip(Color color) {
         for (int i = 0; i < ledsCount; i++) {
             setPixel(i, color);
         }
     }
 
 
-    public synchronized Color getPixel(int pixel) {
+    public Color getPixel(int pixel) {
         return this.pixels[pixel];
     }
 
-    public synchronized void loop(long curTime) {
+    public void loop(long curTime) {
         Effect e = this.currentEffect;
         if (this.isRunEffect()) {
             if (curTime - lastUpdateInMillis >= e.delay) {
@@ -238,7 +238,7 @@ public class Strip {
 
     }
 
-    public synchronized void setCurrentEffect(Effect effect, String name) {
+    public void setCurrentEffect(Effect effect, String name) {
         this.currentEffect = effect;
         application.getMqttClient().publishChange(this, ChangeTopic.FX, name);
 
@@ -254,7 +254,7 @@ public class Strip {
     }
 
     public void loopBrightness(long curTime) {
-        int alphaDecayDelay = 5;
+        int alphaDecayDelay = (int) (Application.FPS / 50);
         if (this.brightnessChange) {
             if (curTime - lastBrightnessChange >= alphaDecayDelay) {
                 if (toBrightness < brightness) {
@@ -263,7 +263,7 @@ public class Strip {
 
                 } else if (toBrightness > brightness) {
                     lastBrightnessChange = curTime;
-                    brightness++;
+                    brightness += 5;
                 } else {
                     if (this.brightness == 0) {
                         System.out.println("Yo");
@@ -282,12 +282,13 @@ public class Strip {
     }
 
     public void loopColor(long curTime) {
-        int alphaDecayDelay = 5;
+        int alphaDecayDelay = (int) (Application.FPS / 50);
         if (this.colorChange) {
             if (curTime - lastColorChange >= alphaDecayDelay) {
                 lastColorChange = curTime;
                 if (blendAmt < 255) {
-                    this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
+                    this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, blendAmt += 5);
+                    if (blendAmt > 255) blendAmt = 255;
                 } else {
                     this.colorChange = false;
                     this.blendAmt = 0;
