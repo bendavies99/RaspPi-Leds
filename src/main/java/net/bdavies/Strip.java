@@ -259,7 +259,6 @@ public class Strip {
     public void loopBrightness(long curTime) {
         int alphaDecayDelay = 5;
         if (this.brightnessChange) {
-            log.info("Running brightness change");
             if (curTime - lastBrightnessChange >= alphaDecayDelay) {
                 if (toBrightness < brightness) {
                     lastBrightnessChange = curTime;
@@ -270,7 +269,6 @@ public class Strip {
                     brightness++;
                 } else {
                     if (this.brightness == 0) {
-                        System.out.println("Yo");
                         this.runEffect = false;
                         setState(State.OFF);
                     }
