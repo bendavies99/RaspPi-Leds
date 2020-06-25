@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Solid extends GlobalColorEffect {
 
+    private Color oldColor = Color.BLACK;
+
     public Solid(Map<String, Object> data) {
         super(data);
     }
@@ -19,6 +21,8 @@ public class Solid extends GlobalColorEffect {
 
     @Override
     protected void renderEffect(Color color, Strip strip) {
+        if (oldColor.getColorBits() == color.getColorBits()) return;
+        oldColor = color;
         strip.setStrip(color);
         strip.render();
     }
