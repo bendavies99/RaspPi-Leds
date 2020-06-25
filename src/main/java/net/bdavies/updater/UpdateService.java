@@ -126,11 +126,13 @@ public class UpdateService {
         AtomicBoolean copy = new AtomicBoolean(true);
         try {
             Arrays.stream(Objects.requireNonNull(ourLibsFolder.listFiles()))
+                    .filter(f1 -> !f1.getName().contains("rpi-ws"))
                     .filter(f ->
                             Arrays.stream(Objects.requireNonNull(libsFolder.listFiles()))
                                     .noneMatch(f1 -> f1.getName().equals(f.getName()))) /* delete outdated libraries */
                     .forEach(File::deleteOnExit);
-            Arrays.stream(Objects.requireNonNull(libsFolder.listFiles())).forEach(f -> {
+            Arrays.stream(Objects.requireNonNull(libsFolder.listFiles()))
+                    .filter(f -> !f.getName().contains("rpi-ws")).forEach(f -> {
                 try {
                     FileUtils.copyFileToDirectory(f, ourLibsFolder);
                 } catch (IOException e) {
