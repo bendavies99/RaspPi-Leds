@@ -51,13 +51,11 @@ public class Strip {
     private Color currentColor;
     private boolean brightnessChange = false;
     private int toBrightness = 0;
-    private long lastBrightnessChange = System.currentTimeMillis();
     private int lastBrightnessUsed = 0;
     @Getter
     private State state;
     private boolean colorChange = false;
     private Color toColor = Color.BLACK;
-    private long lastColorChange = System.currentTimeMillis();
     private int blendAmt = 0;
     private Color oldColor = Color.RED;
 
@@ -257,47 +255,38 @@ public class Strip {
         }
     }
 
-    public void loopBrightness(long curTime) {
-        int alphaDecayDelay = 5;
+    public void loopBrightness() {
         if (this.brightnessChange) {
-            if (curTime - lastBrightnessChange >= alphaDecayDelay) {
-                if (toBrightness < brightness) {
-                    lastBrightnessChange = curTime;
-                    brightness--;
+            if (toBrightness < brightness) {
+                brightness--;
 
-                } else if (toBrightness > brightness) {
-                    lastBrightnessChange = curTime;
-                    brightness++;
-                } else {
-                    if (this.brightness == 0) {
-                        this.runEffect = false;
-                        setState(State.OFF);
-                    }
-                    application.getMqttClient().publishChange(this, ChangeTopic.BRIGHTNESS,
-                            String.valueOf(brightness));
-                    brightnessChange = false;
+            } else if (toBrightness > brightness) {
+                brightness++;
+            } else {
+                if (this.brightness == 0) {
+                    this.runEffect = false;
+                    setState(State.OFF);
                 }
+                application.getMqttClient().publishChange(this, ChangeTopic.BRIGHTNESS,
+                        String.valueOf(brightness));
+                brightnessChange = false;
+            }
 
 
                 render();
-            }
         }
     }
 
-    public void loopColor(long curTime) {
-        int alphaDecayDelay = 5;
+    public void loopColor() {
         if (this.colorChange) {
-            if (curTime - lastColorChange >= alphaDecayDelay) {
-                lastColorChange = curTime;
-                if (blendAmt < 255) {
-                    this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
-                } else {
-                    this.colorChange = false;
-                    this.blendAmt = 0;
-                    this.currentColor = this.toColor;
-                }
-                render();
+            if (blendAmt < 255) {
+                this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
+            } else {
+                this.colorChange = false;
+                this.blendAmt = 0;
+                this.currentColor = this.toColor;
             }
+            render();
         }
     }
 

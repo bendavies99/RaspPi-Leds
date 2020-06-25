@@ -23,7 +23,6 @@ import java.util.concurrent.Executors;
 public class Application implements Runnable {
 
     public static final double FPS = 15.0; //RaspPi Will handle this better
-    private static final double AUX_FPS = 144.0f; // For auxiliary items like color changes and brightness.
     @Getter
     private static ExecutorService service;
     private final List<Strip> strips;
@@ -68,23 +67,22 @@ public class Application implements Runnable {
         pollingService = new PollingService(this);
         auxThread = new Thread(() -> {
             long lastTime = System.nanoTime();
-            double ns = 1000000000.0 / AUX_FPS;
+            double ns = 1000000000.0 / FPS;
             double delta = 0;
             while (running) {
                 try {
-                    long curTime = System.currentTimeMillis();
                     long now = System.nanoTime();
                     delta += (now - lastTime) / ns;
                     lastTime = now;
                     if (delta >= 1) {
                         for (int i = 0; i < strips.size(); i++) {
-                            strips.get(i).loopColor(curTime);
-                            strips.get(i).loopBrightness(curTime);
+                            strips.get(i).loopColor();
+                            strips.get(i).loopBrightness();
                         }
                         delta--;
                     }
                     //noinspection BusyWait
-                    Thread.sleep((long) (1000 / AUX_FPS));
+                    Thread.sleep((long) (1000 / FPS));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
