@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.4...v1.1.5) (2020-06-26)
+
+
+### Bug Fixes
+
+* Quicker brightness change when decaying ([77e72c3](https://github.com/bendavies99/RaspPi-Leds/commit/77e72c3d7070527d57915575f8ba9c8777f88d2b))
+
 ## [1.1.4](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.3...v1.1.4) (2020-06-25)
 
 
