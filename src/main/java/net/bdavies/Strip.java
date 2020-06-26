@@ -258,8 +258,8 @@ public class Strip {
     public void loopBrightness() {
         if (this.brightnessChange) {
             if (toBrightness < brightness) {
-                brightness--;
-
+                brightness -= 5;
+                if (brightness < 0) brightness = 0;
             } else if (toBrightness > brightness) {
                 brightness++;
             } else {
