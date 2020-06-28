@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.7...v1.1.8) (2020-06-28)
+
+
+### Bug Fixes
+
+* Use different for different strips ([17df8b5](https://github.com/bendavies99/RaspPi-Leds/commit/17df8b5e923f17200dee84fe4871678f78e62ab1))
+
 ## [1.1.7](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.6...v1.1.7) (2020-06-28)
 
 
