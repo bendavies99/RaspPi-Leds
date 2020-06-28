@@ -21,6 +21,7 @@ import java.util.HashMap;
 public class Strip {
 
     private static DatagramSocket socket;
+    private static int DMA_CHAN = 10;
 
     @Getter
     private final int ledsCount;
@@ -76,7 +77,9 @@ public class Strip {
         this.type = type;
         this.application = application;
         this.frequencyHz = 800000;
-        this.dma = 10;
+        this.dma = Strip.DMA_CHAN;
+        Strip.DMA_CHAN += 1;
+        if (Strip.DMA_CHAN > 14) Strip.DMA_CHAN = 14;
         this.pwmChannel = (gpioPin == 18 || gpioPin == 12 || gpioPin == 10) ? 0 : 1;
         this.invert = false;
         this.stripType = LedStripType.WS2811_STRIP_GRB;
@@ -279,7 +282,7 @@ public class Strip {
             }
 
 
-                render();
+            render();
         }
     }
 
