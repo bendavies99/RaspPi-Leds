@@ -11,8 +11,10 @@
       /* Set pixels to black on boot */
       "name": "Test LED Strip",
       /* This is the name of your strip this is what you will see on home assistant */
-      "id": "Test-Led"
+      "id": "Test-Led",
       /* MQTT Topic to use this your device topic, please ensure this is different for each strip. */
+      "reactivePort": 3457
+      /* This is the port to use for the Reactive effect */
     }
   ],
   "mqtt": {

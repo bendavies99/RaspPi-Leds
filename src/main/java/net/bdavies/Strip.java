@@ -13,14 +13,11 @@ import net.bdavies.fx.basic.Solid;
 import net.bdavies.mqtt.ChangeTopic;
 import net.bdavies.networking.ReactiveUDP;
 
-import java.net.DatagramSocket;
-import java.net.SocketException;
 import java.util.HashMap;
 
 @Slf4j
 public class Strip {
 
-    private static DatagramSocket socket;
     private static int DMA_CHAN = 10;
 
     @Getter
@@ -65,13 +62,6 @@ public class Strip {
     private boolean forceRender = false;
 
     public Strip(StripConfig config, SetupType type, Application application) {
-        if (Strip.socket == null) {
-            try {
-                Strip.socket = new DatagramSocket(3457);
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
-        }
         this.ledsCount = config.getLedCount();
         this.gpioPin = config.getPinNumber();
         this.type = type;
@@ -94,7 +84,7 @@ public class Strip {
         setCurrentColor(Color.RED);
         setBrightness(config.getBrightness());
         setCurrentEffect(new Solid(new HashMap<>()), "Solid");
-        this.reactiveUDP = new ReactiveUDP(this, Strip.socket);
+        this.reactiveUDP = new ReactiveUDP(this, config.getReactivePort());
     }
 
     public synchronized void init() {
@@ -255,7 +245,6 @@ public class Strip {
     public synchronized void shutdown() {
         off();
         this.reactiveUDP.stop();
-        Strip.socket.close();
         if (this.frame != null) {
             frame.getPanel().stop();
             frame.dispose();

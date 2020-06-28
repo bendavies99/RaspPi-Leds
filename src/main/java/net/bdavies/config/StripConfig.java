@@ -15,4 +15,6 @@ public class StripConfig {
     private boolean clearOnBoot;
     @Getter
     private String id;
+    @Getter
+    private int reactivePort;
 }

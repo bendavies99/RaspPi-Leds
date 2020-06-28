@@ -8,13 +8,14 @@ import net.bdavies.Strip;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.Arrays;
 
 @Slf4j
 public class ReactiveUDP implements Runnable {
 
     private final Strip strip;
-    private final DatagramSocket socket;
+    private DatagramSocket socket;
     private final byte[] buf;
     private final byte[] ledBuf;
     @SuppressWarnings("MismatchedReadAndWriteOfArray")
@@ -23,9 +24,13 @@ public class ReactiveUDP implements Runnable {
     private Thread thread;
     private boolean running;
 
-    public ReactiveUDP(Strip s, DatagramSocket socket) {
+    public ReactiveUDP(Strip s, int port) {
         this.strip = s;
-        this.socket = socket;
+        try {
+            this.socket = new DatagramSocket(port);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         buf = new byte[(s.getId() + "\\e").getBytes().length + (s.getLedsCount() * 4)]; //Name + \e + numOfLeds [idx, r g b]
         ledBuf = new byte[(s.getLedsCount() * 4)];
         data = new Color[s.getLedsCount()];
@@ -52,6 +57,8 @@ public class ReactiveUDP implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        this.socket.close();
 
     }
 
@@ -82,8 +89,6 @@ public class ReactiveUDP implements Runnable {
                         data[idx] = new Color(red, green, blue);
                     }
 
-                } else {
-                    continue;
                 }
 
             } catch (IOException e) {
