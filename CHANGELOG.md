@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.6...v1.1.7) (2020-06-28)
+
+
+### Bug Fixes
+
+* Use higher DMA channels when adding more strips ([3eb976d](https://github.com/bendavies99/RaspPi-Leds/commit/3eb976d5899bc6451aa021fcca220982adf02a02))
+
 ## [1.1.6](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.5...v1.1.6) (2020-06-28)
 
 
