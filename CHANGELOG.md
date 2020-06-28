@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.5...v1.1.6) (2020-06-28)
+
+
+### Bug Fixes
+
+* Brightness returning to normal was quite slow, and solid was not rendering from off to on ([e50e7be](https://github.com/bendavies99/RaspPi-Leds/commit/e50e7be9478ecc5197f01cefd99b000920309903))
+
 ## [1.1.5](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.4...v1.1.5) (2020-06-26)
 
 
