@@ -4,6 +4,7 @@ import com.github.mbelling.ws281x.Color;
 import com.github.mbelling.ws281x.LedStripType;
 import com.github.mbelling.ws281x.Ws281xLedStrip;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.StripConfig;
 import net.bdavies.fx.Effect;
@@ -58,6 +59,9 @@ public class Strip {
     private Color toColor = Color.BLACK;
     private int blendAmt = 0;
     private Color oldColor = Color.RED;
+    @Getter
+    @Setter
+    private boolean forceRender = false;
 
     public Strip(StripConfig config, SetupType type, Application application) {
         if (Strip.socket == null) {
@@ -257,11 +261,13 @@ public class Strip {
 
     public void loopBrightness() {
         if (this.brightnessChange) {
+            this.forceRender = true;
             if (toBrightness < brightness) {
                 brightness -= 5;
                 if (brightness < 0) brightness = 0;
             } else if (toBrightness > brightness) {
-                brightness++;
+                brightness += 5;
+                if (brightness > 255) brightness = 255;
             } else {
                 if (this.brightness == 0) {
                     this.runEffect = false;
@@ -279,6 +285,7 @@ public class Strip {
 
     public void loopColor() {
         if (this.colorChange) {
+            this.forceRender = true;
             if (blendAmt < 255) {
                 this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
             } else {

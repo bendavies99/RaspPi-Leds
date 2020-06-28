@@ -21,9 +21,10 @@ public class Solid extends GlobalColorEffect {
 
     @Override
     protected void renderEffect(Color color, Strip strip) {
-        if (oldColor.getColorBits() == color.getColorBits()) return;
+        if (oldColor.getColorBits() == color.getColorBits() && !strip.isForceRender()) return;
         oldColor = color;
         strip.setStrip(color);
         strip.render();
+        strip.setForceRender(false);
     }
 }
