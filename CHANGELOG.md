@@ -1,3 +1,10 @@
+## [1.1.9](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.8...v1.1.9) (2020-06-28)
+
+
+### Bug Fixes
+
+* pin 21 use pwm channel 0 ([a2ed854](https://github.com/bendavies99/RaspPi-Leds/commit/a2ed854d7f7ccfc04477f6260778114c7c3b6e04))
+
 ## [1.1.8](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.7...v1.1.8) (2020-06-28)
 
 
