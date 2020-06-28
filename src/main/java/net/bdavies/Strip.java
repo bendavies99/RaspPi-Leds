@@ -70,7 +70,7 @@ public class Strip {
         this.dma = Strip.DMA_CHAN;
         Strip.DMA_CHAN += 1;
         if (Strip.DMA_CHAN > 14) Strip.DMA_CHAN = 14;
-        this.pwmChannel = (gpioPin == 18 || gpioPin == 12 || gpioPin == 10) ? 0 : 1;
+        this.pwmChannel = (gpioPin == 18 || gpioPin == 12 || gpioPin == 10 || gpioPin == 21) ? 0 : 1;
         this.invert = false;
         this.stripType = LedStripType.WS2811_STRIP_GRB;
         this.clearOnExit = false;
