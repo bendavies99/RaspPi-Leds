@@ -1,3 +1,10 @@
+## [1.1.12](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.11...v1.1.12) (2020-07-12)
+
+
+### Bug Fixes
+
+* Ensure that a strip is rendered blank if off ([cda704c](https://github.com/bendavies99/RaspPi-Leds/commit/cda704c1afaa3bcc076901261f95f08cb70212ab))
+
 ## [1.1.11](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.10...v1.1.11) (2020-07-12)
 
 
