@@ -231,6 +231,11 @@ public class Strip {
                 lastUpdateInMillis = curTime;
                 e.render(this);
             }
+        } else {
+            if (curTime - lastUpdateInMillis >= 10000) {
+                lastUpdateInMillis = curTime;
+                render();
+            }
         }
 
 
@@ -279,13 +284,14 @@ public class Strip {
         if (this.colorChange) {
             this.forceRender = true;
             if (blendAmt < 255) {
-                this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, ++blendAmt);
+                blendAmt += 5;
+                blendAmt = Math.min(blendAmt, 255);
+                this.currentColor = FXUtil.colorBlend(this.oldColor, this.toColor, blendAmt);
             } else {
                 this.colorChange = false;
                 this.blendAmt = 0;
                 this.currentColor = this.toColor;
             }
-            render();
         }
     }
 

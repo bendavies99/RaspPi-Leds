@@ -75,14 +75,14 @@ public class Application implements Runnable {
                     delta += (now - lastTime) / ns;
                     lastTime = now;
                     if (delta >= 1) {
-                        for (int i = 0; i < strips.size(); i++) {
-                            strips.get(i).loopColor();
-                            strips.get(i).loopBrightness();
+                        for (Strip strip : strips) {
+                            strip.loopColor();
+                            strip.loopBrightness();
                         }
                         delta--;
                     }
                     //noinspection BusyWait
-                    Thread.sleep((long) (1000 / FPS));
+                    Thread.sleep(1000 / 30);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
