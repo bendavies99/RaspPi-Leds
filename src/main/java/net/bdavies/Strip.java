@@ -73,35 +73,37 @@ public class Strip {
         this.pwmChannel = (gpioPin == 18 || gpioPin == 12 || gpioPin == 10 || gpioPin == 21) ? 0 : 1;
         this.invert = false;
         this.stripType = LedStripType.WS2811_STRIP_GRB;
-        this.clearOnExit = false;
+        this.clearOnExit = true;
         this.clearOnBoot = config.isClearOnBoot();
         this.pixels = new Color[ledsCount];
         this.pixelChanged = new boolean[ledsCount];
         this.runEffect = true;
         this.id = config.getId();
         this.oldBrightness = config.getBrightness();
-        setState(State.ON);
-        setCurrentColor(Color.RED);
-        setBrightness(config.getBrightness());
-        setCurrentEffect(new Solid(new HashMap<>()), "Solid");
         this.reactiveUDP = new ReactiveUDP(this, config.getReactivePort());
-    }
-
-    public synchronized void init() {
+        this.brightness = config.getBrightness();
 
         if (type == SetupType.PROD) {
             productionStrip = new Ws281xLedStrip(ledsCount, gpioPin, frequencyHz, dma, brightness, pwmChannel,
-                    invert, stripType, clearOnExit);
+                    false, stripType, true);
             log.info("Setup Strip");
         } else {
             frame = new DevFrame(ledsCount, this.getId());
             frame.getPanel().start();
         }
+    }
+
+    public synchronized void init() {
+
+        setState(State.ON);
+        setCurrentEffect(new Solid(new HashMap<>()), "Solid");
 
         if (clearOnBoot) {
             setCurrentColor(Color.BLACK);
-            render();
+        } else {
+            setCurrentColor(Color.RED);
         }
+        //render();
     }
 
     public void render() {

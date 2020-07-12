@@ -2,6 +2,7 @@ package net.bdavies.mqtt;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.bdavies.Application;
 import net.bdavies.Strip;
@@ -26,6 +27,8 @@ public class MQTTClient {
     private final Application application;
     private volatile MqttClient client;
     private int connectAttempts = 0;
+    @Getter
+    private boolean connected = false;
 
     public MQTTClient(Application application, MQTTConfig config) {
         this.config = config;
@@ -50,7 +53,13 @@ public class MQTTClient {
             connectOptions.setConnectionTimeout(1); // 1 second
 
             try {
+
                 connectAttempts++;
+
+                client.connectWithResult(connectOptions);
+                client.subscribe("Rasp-Pi-Leds");
+                log.info("Connected to the MQTT Server");
+                connected = true;
                 client.setCallback(new MqttCallback() {
 
                     final SetEffectCommand setEffect = new SetEffectCommand();
@@ -60,7 +69,8 @@ public class MQTTClient {
 
                     @Override
                     public void connectionLost(Throwable cause) {
-
+                        log.error("MQTT Lost Connection Restarting...");
+                        application.restart();
                     }
 
                     @Override
@@ -101,9 +111,6 @@ public class MQTTClient {
 
                     }
                 });
-                client.connectWithResult(connectOptions);
-                client.subscribe("Rasp-Pi-Leds");
-                log.info("Connected to the MQTT Server");
             } catch (MqttException e) {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +

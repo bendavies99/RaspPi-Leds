@@ -54,11 +54,40 @@ public class Application implements Runnable {
         this.strips = new ArrayList<>();
         this.mqttClient = new MQTTClient(this, config.getMqtt());
         this.mqttClient.connect();
+
         config.getStrips().forEach(s -> {
             Strip strip = new Strip(s, dev ? Strip.SetupType.DEV : Strip.SetupType.PROD, this);
             this.strips.add(strip);
-            strip.init();
         });
+
+        while (!mqttClient.isConnected()) {
+            System.out.print(".");
+            for (Strip strip : strips) {
+                strip.setStrip(0, 0, 255);
+                strip.render();
+            }
+            try {
+                //noinspection BusyWait
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (Strip strip : strips) {
+                strip.setStrip(0, 0, 0);
+                strip.render();
+            }
+            try {
+                //noinspection BusyWait
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (Strip strip : strips) {
+            strip.init();
+        }
+
 
         config.getStrips().forEach(mqttClient::listenToStrip);
 
