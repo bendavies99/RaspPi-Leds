@@ -1,3 +1,11 @@
+## [1.1.10](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.9...v1.1.10) (2020-07-12)
+
+
+### Bug Fixes
+
+* Brightness and Color change really buggy, and when the strip is off render black for interference ([10fcacf](https://github.com/bendavies99/RaspPi-Leds/commit/10fcacf327455420d9631baa82e7f1f8ba5241c6))
+* Issues regarding MQTT Connectivity ([ccd6952](https://github.com/bendavies99/RaspPi-Leds/commit/ccd6952a3f4b4f7213ad4fc9627f8900fa87fb15))
+
 ## [1.1.9](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.8...v1.1.9) (2020-06-28)
 
 
