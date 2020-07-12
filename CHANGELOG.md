@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.10...v1.1.11) (2020-07-12)
+
+
+### Bug Fixes
+
+*  Ping mqtt broker every 5 seconds, add gpio pin 9 to strip ([33d3b06](https://github.com/bendavies99/RaspPi-Leds/commit/33d3b06c513cde4bc3fbb8f5f5485a6e5b64f6af))
+
 ## [1.1.10](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.9...v1.1.10) (2020-07-12)
 
 
