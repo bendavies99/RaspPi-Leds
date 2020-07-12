@@ -237,6 +237,13 @@ public class Strip {
             if (curTime - lastUpdateInMillis >= 10000) {
                 lastUpdateInMillis = curTime;
                 render();
+                if (this.type == SetupType.PROD) {
+                    productionStrip.setBrightness(255);
+                    productionStrip.setStrip(0, 0, 0);
+                    productionStrip.render();
+                    productionStrip.setBrightness(0);
+                    productionStrip.render();
+                }
             }
         }
 
