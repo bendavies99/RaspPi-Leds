@@ -19,6 +19,8 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Slf4j
 public class MQTTClient {
@@ -26,6 +28,7 @@ public class MQTTClient {
     private final MQTTConfig config;
     private final Application application;
     private volatile MqttClient client;
+    private final Timer timer;
     private int connectAttempts = 0;
     @Getter
     private boolean connected = false;
@@ -33,6 +36,7 @@ public class MQTTClient {
     public MQTTClient(Application application, MQTTConfig config) {
         this.config = config;
         this.application = application;
+        timer = new Timer();
     }
 
     public void connect() {
@@ -111,6 +115,16 @@ public class MQTTClient {
 
                     }
                 });
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            client.publish("ping", "ping".getBytes(), 2, false);
+                        } catch (MqttException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 5000, 5000);
             } catch (MqttException e) {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +
