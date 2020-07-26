@@ -1,3 +1,10 @@
+## [1.1.14](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.13...v1.1.14) (2020-07-26)
+
+
+### Bug Fixes
+
+* a problem with indexes ([449e795](https://github.com/bendavies99/RaspPi-Leds/commit/449e795cd8057db3a937a0312b4023082160ade1))
+
 ## [1.1.13](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.12...v1.1.13) (2020-07-26)
 
 
