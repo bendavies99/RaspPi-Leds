@@ -70,26 +70,21 @@ public class ReactiveUDP implements Runnable {
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
             try {
                 socket.receive(packet);
-
-                String received = new String(packet.getData(), 0, packet.getLength());
-                if (received.contains(strip.getId() + "\\e")) {
-
-                    System.arraycopy(packet.getData(), (strip.getId() + "\\e").getBytes().length,
+                    System.arraycopy(packet.getData(), 0,
                             ledBuf, 0, ledBuf.length);
 
 
-                    for (int i = 0; i < ledBuf.length; i += 4) {
-                        int idx = ledBuf[i] & 0xff;
+                    int idx = 0;
+                    for (int i = 0; i < ledBuf.length; i += 3) {
+                        if(idx > strip.getLedsCount() - 1) break;
                         int red = ledBuf[i + 1] & 0xff;
                         int green = ledBuf[i + 2] & 0xff;
                         int blue = ledBuf[i + 3] & 0xff;
 
                         //log.info("R: {}, G: {}, B: {}", red, green, blue);
 
-                        data[idx] = new Color(red, green, blue);
+                        data[idx++] = new Color(red, green, blue);
                     }
-
-                }
 
             } catch (IOException e) {
                 e.printStackTrace();
