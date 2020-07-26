@@ -1,3 +1,10 @@
+## [1.1.13](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.12...v1.1.13) (2020-07-26)
+
+
+### Bug Fixes
+
+* Allow ReactiveLEDs to have unlimited leds ([31d6e46](https://github.com/bendavies99/RaspPi-Leds/commit/31d6e46482c0723f64d4392a726ab06023908af6))
+
 ## [1.1.12](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.11...v1.1.12) (2020-07-12)
 
 
