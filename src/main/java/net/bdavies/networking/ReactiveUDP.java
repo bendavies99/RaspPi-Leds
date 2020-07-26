@@ -77,9 +77,9 @@ public class ReactiveUDP implements Runnable {
                     int idx = 0;
                     for (int i = 0; i < ledBuf.length; i += 3) {
                         if(idx > strip.getLedsCount() - 1) break;
-                        int red = ledBuf[i + 1] & 0xff;
-                        int green = ledBuf[i + 2] & 0xff;
-                        int blue = ledBuf[i + 3] & 0xff;
+                        int red = ledBuf[i] & 0xff;
+                        int green = ledBuf[i + 1] & 0xff;
+                        int blue = ledBuf[i + 2] & 0xff;
 
                         //log.info("R: {}, G: {}, B: {}", red, green, blue);
 
