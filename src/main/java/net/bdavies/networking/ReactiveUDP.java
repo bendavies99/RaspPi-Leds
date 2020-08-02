@@ -31,8 +31,8 @@ public class ReactiveUDP implements Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        buf = new byte[(s.getId() + "\\e").getBytes().length + (s.getLedsCount() * 4)]; //Name + \e + numOfLeds [idx, r g b]
-        ledBuf = new byte[(s.getLedsCount() * 4)];
+        buf = new byte[s.getLedsCount() * 3]; //Name + \e + numOfLeds [idx, r g b]
+        ledBuf = new byte[s.getLedsCount() * 3];
         data = new Color[s.getLedsCount()];
         Arrays.fill(data, Color.BLACK);
     }
@@ -42,6 +42,7 @@ public class ReactiveUDP implements Runnable {
 
         running = true;
 
+        log.debug("Started Reactive for strip: {}", strip.getId());
         thread = new Thread(this);
         thread.start();
 
@@ -58,6 +59,7 @@ public class ReactiveUDP implements Runnable {
             e.printStackTrace();
         }
 
+        log.debug("Stopped Reactive for strip: {}", strip.getId());
         this.socket.close();
 
     }
@@ -81,7 +83,9 @@ public class ReactiveUDP implements Runnable {
                         int green = ledBuf[i + 1] & 0xff;
                         int blue = ledBuf[i + 2] & 0xff;
 
-                        //log.info("R: {}, G: {}, B: {}", red, green, blue);
+                        if(socket.getPort() == 3459) {
+                            log.info("Strip: {}, R: {}, G: {}, B: {}", strip.getId(), red, green, blue);
+                        }
 
                         data[idx++] = new Color(red, green, blue);
                     }
