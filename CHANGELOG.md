@@ -1,3 +1,10 @@
+## [1.1.15](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.14...v1.1.15) (2020-08-02)
+
+
+### Bug Fixes
+
+* added debugging to reactive leds ([7784564](https://github.com/bendavies99/RaspPi-Leds/commit/77845641dad29038e94c03d5c8edde90f8e2738d))
+
 ## [1.1.14](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.13...v1.1.14) (2020-07-26)
 
 
