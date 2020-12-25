@@ -30,6 +30,7 @@ public class MQTTClient {
     private MqttClient client;
     private final Timer timer;
     private int connectAttempts = 0;
+    private boolean callbackSet = false;
     @Getter
     private boolean connected = false;
 
@@ -65,18 +66,25 @@ public class MQTTClient {
                 client.connectWithResult(connectOptions);
                 client.subscribe("Rasp-Pi-Leds");
                 log.info("Connected to the MQTT Server");
+                connectAttempts = 0;
                 connected = true;
+                if(!callbackSet) {
                 client.setCallback(new MqttCallback() {
 
                     final SetEffectCommand setEffect = new SetEffectCommand();
                     final StateCommand stateCommand = new StateCommand();
                     final ColorCommand colorCommand = new ColorCommand();
                     final BrightnessCommand brightnessCommand = new BrightnessCommand();
+                    
+                    public MqttCallback() {
+                       callbackSet = true;
+                    }
 
                     @Override
                     public void connectionLost(Throwable cause) {
                         log.error("MQTT Lost Connection Restarting...");
-                        application.restart();
+                        connected = false;
+                        connect();
                     }
 
                     @Override
@@ -117,7 +125,7 @@ public class MQTTClient {
 
                     }
                 });
-                timer.scheduleAtFixedRate(new TimerTask() {
+                    timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
                         try {
@@ -127,6 +135,8 @@ public class MQTTClient {
                         }
                     }
                 }, 5000, 5000);
+                }
+                
             } catch (MqttException e) {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +
