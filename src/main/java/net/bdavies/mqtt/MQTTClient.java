@@ -27,7 +27,7 @@ public class MQTTClient {
 
     private final MQTTConfig config;
     private final Application application;
-    private volatile MqttClient client;
+    private MqttClient client;
     private final Timer timer;
     private int connectAttempts = 0;
     @Getter
@@ -41,8 +41,10 @@ public class MQTTClient {
 
     public void connect() {
         try {
-            client = new MqttClient("tcp://" + config.getBrokerIp() + ":" + config.getPort(),
-                    "RaspPi-Leds:" + RandomStringUtils.randomAlphabetic(7), new MemoryPersistence());
+            if(client == null) {
+                client = new MqttClient("tcp://" + config.getBrokerIp() + ":" + config.getPort(),
+                        "RaspPi-Leds:" + RandomStringUtils.randomAlphabetic(7), new MemoryPersistence());
+            }
             MqttConnectOptions connectOptions = new MqttConnectOptions();
             try {
                 connectOptions.setUserName(config.getUsername());
@@ -54,7 +56,7 @@ public class MQTTClient {
 
             connectOptions.setCleanSession(true);
             connectOptions.setAutomaticReconnect(true);
-            connectOptions.setConnectionTimeout(1); // 1 second
+            connectOptions.setConnectionTimeout(5); // 5 second
 
             try {
 
@@ -129,8 +131,11 @@ public class MQTTClient {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +
                             "log when it has connected.");
+                } else {
+                    log.error("Still trying to connect to MQTT Server, please ensure it is accessible, att connect attempt: {}", connectAttempts);
                 }
-                Application.getService().submit(this::connect);
+                // Application.getService().submit(this::connect);
+                this.connect();
             }
 
         } catch (MqttException e) {
