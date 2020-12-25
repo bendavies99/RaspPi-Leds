@@ -1,3 +1,11 @@
+## [1.1.18](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.17...v1.1.18) (2020-12-25)
+
+
+### Bug Fixes
+
+* callbackset ([70ae2cb](https://github.com/bendavies99/RaspPi-Leds/commit/70ae2cb963e9d1e2c14c8ce25847ddb60be62e9d))
+* client changes ([6802e9e](https://github.com/bendavies99/RaspPi-Leds/commit/6802e9e043ca45bed86e8156d87b0217feb1debf))
+
 ## [1.1.17](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.16...v1.1.17) (2020-12-25)
 
 
