@@ -42,6 +42,8 @@ public class EffectContainer {
         STROBE(Strobe.class),
         THEATER_CHASE(TheaterChase.class),
         HALLOWEEN(Halloween.class),
+        RAINBOW_CYCLE(RainbowCycle.class),
+        FIRE_FLICKER(FireFlicker.class),
         REACTIVE(Reactive.class);
 
 

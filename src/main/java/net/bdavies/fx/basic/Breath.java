@@ -29,7 +29,7 @@ public class Breath extends Effect {
         super(data);
         convertObjectToColor("c1");
         convertObjectToColor("c2");
-        setDefaultConfig("c1", Color.BLACK);
+        setDefaultConfig("c1", Color.RED);
         setDefaultConfig("c2", Color.BLACK);
     }
 

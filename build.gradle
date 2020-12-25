@@ -94,7 +94,7 @@ project.afterEvaluate {
         }
     }
 
-    publish.dependsOn(bintrayUpload)
+    // publish.dependsOn(bintrayUpload)
     project.tasks.bintrayUpload.doLast {
         bintrayPublish
     }

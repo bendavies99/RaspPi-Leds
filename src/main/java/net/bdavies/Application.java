@@ -1,6 +1,8 @@
 package net.bdavies;
 
+import com.github.mbelling.ws281x.Color;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bdavies.config.Config;
 import net.bdavies.config.ConfigFactory;
@@ -36,6 +38,7 @@ public class Application implements Runnable {
     private String version;
     private boolean running;
 
+    @SneakyThrows
     public Application(boolean dev, String[] args) {
         this.args = args;
         FXUtil.fillColourWheelList();
@@ -59,29 +62,46 @@ public class Application implements Runnable {
             Strip strip = new Strip(s, dev ? Strip.SetupType.DEV : Strip.SetupType.PROD, this);
             this.strips.add(strip);
         });
-
+        int progressBar = 0;
         while (!mqttClient.isConnected()) {
-            System.out.print(".");
+
             for (Strip strip : strips) {
-                strip.setStrip(0, 0, 255);
+                int count = (progressBar++) * (int)Math.ceil((float)strip.getLedsCount() / 100.0f);
+                if (count >= strip.getLedsCount()) {
+                    int idx =0;
+                    while(idx <= 4) {
+                        strip.setStrip(Color.RED);
+                        strip.render();
+                        Thread.sleep(500);
+                        strip.setStrip(Color.BLACK);
+                        strip.render();
+                        Thread.sleep(500);
+                        idx++;
+                    }
+                    progressBar = 0;
+                }
+                strip.setPixel(count, 0, 0, 255);
                 strip.render();
             }
             try {
                 //noinspection BusyWait
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            for (Strip strip : strips) {
-                strip.setStrip(0, 0, 0);
-                strip.render();
-            }
-            try {
-                //noinspection BusyWait
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        }
+
+        for (Strip strip : strips) {
+                int idx =0;
+                while(idx <= 4) {
+                    strip.setStrip(Color.GREEN);
+                    strip.render();
+                    Thread.sleep(500);
+                    strip.setStrip(Color.BLACK);
+                    strip.render();
+                    Thread.sleep(500);
+                    idx++;
+                }
         }
 
         for (Strip strip : strips) {
@@ -121,6 +141,7 @@ public class Application implements Runnable {
 
     public static void main(String[] args) {
         log.info("Booting....");
+        log.info("Args: {}", Arrays.toString(args));
         Application application = new Application(Arrays.stream(args).anyMatch(a -> a.toLowerCase().equals("-dev")),
                 args);
         application.start();

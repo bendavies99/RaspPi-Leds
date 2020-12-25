@@ -128,7 +128,9 @@ public class MQTTClient {
                     @Override
                     public void run() {
                         try {
-                            client.publish("ping", "ping".getBytes(), 2, false);
+                            if (connected) {
+                                client.publish("ping", "ping".getBytes(), 2, false);
+                            }
                         } catch (MqttException e) {
                             e.printStackTrace();
                         }
@@ -140,11 +142,9 @@ public class MQTTClient {
                 if (connectAttempts == 1) {
                     log.error("Failed to connect to MQTT Server.. Will try to reconnect in the background and will " +
                             "log when it has connected.");
-                } else {
-                    log.error("Still trying to connect to MQTT Server, please ensure it is accessible, att connect attempt: {}", connectAttempts);
                 }
-                // Application.getService().submit(this::connect);
-                this.connect();
+                Application.getService().submit(this::connect);
+//                this.connect();
             }
 
         } catch (MqttException e) {
