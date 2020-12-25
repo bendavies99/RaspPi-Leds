@@ -1,3 +1,10 @@
+## [1.1.19](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.18...v1.1.19) (2020-12-25)
+
+
+### Bug Fixes
+
+* versioning problems ([32d6be8](https://github.com/bendavies99/RaspPi-Leds/commit/32d6be8c0f9d05c3bddecc21b4cdda597a7a6ef7))
+
 ## [1.1.18](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.17...v1.1.18) (2020-12-25)
 
 
