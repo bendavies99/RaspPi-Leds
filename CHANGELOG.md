@@ -1,3 +1,10 @@
+## [1.1.16](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.15...v1.1.16) (2020-12-25)
+
+
+### Bug Fixes
+
+* client changes ([2863cf8](https://github.com/bendavies99/RaspPi-Leds/commit/2863cf8b5c0d458694409e937deda2209aa3c151))
+
 ## [1.1.15](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.14...v1.1.15) (2020-08-02)
 
 
