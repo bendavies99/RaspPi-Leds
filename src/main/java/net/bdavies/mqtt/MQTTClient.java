@@ -69,6 +69,7 @@ public class MQTTClient {
                 connectAttempts = 0;
                 connected = true;
                 if(!callbackSet) {
+                    callbackSet = true;
                 client.setCallback(new MqttCallback() {
 
                     final SetEffectCommand setEffect = new SetEffectCommand();
@@ -76,9 +77,7 @@ public class MQTTClient {
                     final ColorCommand colorCommand = new ColorCommand();
                     final BrightnessCommand brightnessCommand = new BrightnessCommand();
                     
-                    public MqttCallback() {
-                       callbackSet = true;
-                    }
+  
 
                     @Override
                     public void connectionLost(Throwable cause) {
