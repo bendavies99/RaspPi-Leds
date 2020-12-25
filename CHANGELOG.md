@@ -1,3 +1,10 @@
+## [1.1.17](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.16...v1.1.17) (2020-12-25)
+
+
+### Bug Fixes
+
+* remove gradle publish ([1ebc60f](https://github.com/bendavies99/RaspPi-Leds/commit/1ebc60f2fdd90f62e1854f0d8bf0cf75d4300002))
+
 ## [1.1.16](https://github.com/bendavies99/RaspPi-Leds/compare/v1.1.15...v1.1.16) (2020-12-25)
 
 
